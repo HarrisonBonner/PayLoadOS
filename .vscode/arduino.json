@@ -1,5 +1,6 @@
 {
     "configuration": "cpu=atmega328",
     "board": "arduino:avr:nano",
-    "sketch": "PayLoadOS.ino"
+    "sketch": "PayLoadOS.ino",
+    "port": "/dev/tty.usbserial-1410"
 }
