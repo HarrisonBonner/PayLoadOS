@@ -3,7 +3,7 @@
 #include "Adafruit_BMP3XX.h"
 #include <SPI.h>
 
-#define ALTITUDE_THRESHOLD 165 // Set your desired altitude threshold in meters
+#define ALTITUDE_THRESHOLD 162 // Set your desired altitude threshold in meters
 #define RELAY_PIN_1 9
 #define RELAY_PIN_2 8
 #define motorRelay 7
@@ -38,7 +38,9 @@ void setup()
   pinMode(RELAY_PIN_1, OUTPUT);
   pinMode(RELAY_PIN_2, OUTPUT);
   pinMode(motorRelay, OUTPUT);
-
+  digitalWrite(RELAY_PIN_1, LOW);
+  digitalWrite(RELAY_PIN_2, LOW);
+  digitalWrite(motorRelay, LOW);
 }
 
 void loop()
