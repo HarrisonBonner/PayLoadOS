@@ -3,7 +3,8 @@
 #include "Adafruit_BMP3XX.h"
 #include <SPI.h>
 
-#define ALTITUDE_THRESHOLD 162 // Set your desired altitude threshold in meters
+int ALTITUDE_THRESHOLD_ADD = 130; // Set your desired altitude threshold in meters
+int ALTITUDE_THRESHOLD;
 #define RELAY_PIN_1 9
 #define RELAY_PIN_2 8
 #define motorRelay 7
@@ -38,57 +39,90 @@ void setup()
   pinMode(RELAY_PIN_1, OUTPUT);
   pinMode(RELAY_PIN_2, OUTPUT);
   pinMode(motorRelay, OUTPUT);
+  
   digitalWrite(RELAY_PIN_1, LOW);
   digitalWrite(RELAY_PIN_2, LOW);
   digitalWrite(motorRelay, LOW);
-}
 
-void loop()
-{
-  // System Checking loop until we meet threshold
-
-  // Get current altitude
-
-  if (!bmp.performReading())
+    if (!bmp.performReading())
   {
     Serial.println("Failed to perform reading :(");
     return;
   }
+  //Take a few readings to stablize the altimeter 
+  int testAltitude = bmp.readAltitude(SEALEVELPRESSURE_HPA);
+  testAltitude = bmp.readAltitude(SEALEVELPRESSURE_HPA);
+  testAltitude = bmp.readAltitude(SEALEVELPRESSURE_HPA);
 
-  float currentAltitude = bmp.readAltitude(SEALEVELPRESSURE_HPA);
-
-  Serial.print("Altitude: ");
-  Serial.print(currentAltitude);
-  Serial.println(" meters");
-  Serial.print("Count: ");
-  Serial.println(count);
-  // Check to see if it is the threshold, we technically need to hit it twice
-  if (currentAltitude >= ALTITUDE_THRESHOLD && count > 3)
-  {
-    delay(1000);
-    while (true)
-    {
-
-      currentAltitude = bmp.readAltitude(SEALEVELPRESSURE_HPA);
-      Serial.println("In second loop");
-      Serial.print("Altitude: ");
-      Serial.print(currentAltitude);
-      Serial.println(" meters");
-
-      if (currentAltitude < ALTITUDE_THRESHOLD)
-      {
-        digitalWrite(motorRelay, HIGH);
-        Serial.println("Motor relay activated");
-        delay(3000);
-        digitalWrite(RELAY_PIN_1, HIGH); // Activate relay 1
-        digitalWrite(RELAY_PIN_2, HIGH); // Activate relay 2
-        Serial.println("Relays activated!");
-        break;
-      }
-      delay(100);
-    }
+  //Take 5 altitudes, average, then set as zero altitude
+  int altitudeSum = 0;
+  for(int i = 0; i < 5; i++){
+    altitudeSum += bmp.readAltitude(SEALEVELPRESSURE_HPA);
   }
-  count++;
+  int avgAlt = altitudeSum / 5;
+  ALTITUDE_THRESHOLD = avgAlt + ALTITUDE_THRESHOLD_ADD;
 
-  delay(200);
+  Serial.print("avgAlt was: ");
+  Serial.println(avgAlt);
+
+  Serial.print("ALTITUDE_THRESHOLD is: ");
+  Serial.println(ALTITUDE_THRESHOLD);
+
+}
+
+void loop()
+{
+  digitalWrite(8, HIGH);
+  delay(1000);
+  digitalWrite(8,LOW);
+  delay(1000);
+  // System Checking loop until we meet threshold
+
+  // Get current altitude
+
+  // if (!bmp.performReading())
+  // {
+  //   Serial.println("Failed to perform reading :(");
+  //   return;
+  // }
+
+  // float currentAltitude = bmp.readAltitude(SEALEVELPRESSURE_HPA);
+
+  // Serial.print("Altitude: ");
+  // Serial.print(currentAltitude);
+  // Serial.println(" meters");
+  // Serial.print("Count: ");
+  // Serial.println(count);
+  // // Check to see if it is the threshold, we technically need to hit it twice
+  // if (currentAltitude >= ALTITUDE_THRESHOLD && count > 3)
+  // {
+  //   delay(1000);
+  //   while (true)
+  //   {
+
+  //     currentAltitude = bmp.readAltitude(SEALEVELPRESSURE_HPA);
+  //     Serial.println("In second loop");
+  //     Serial.print("Altitude: ");
+  //     Serial.print(currentAltitude);
+  //     Serial.println(" meters");
+
+  //     if (currentAltitude < ALTITUDE_THRESHOLD)
+  //     {
+  //       digitalWrite(motorRelay, HIGH);
+  //       Serial.println("Motor relay activated");
+  //       delay(3000);
+  //       digitalWrite(RELAY_PIN_1, HIGH); // Activate relay 1
+  //       digitalWrite(RELAY_PIN_2, HIGH); // Activate relay 2
+  //       Serial.println("Relays activated!");
+  //       delay(3000);
+  //       digitalWrite(RELAY_PIN_1, LOW); // Activate relay 1
+  //       digitalWrite(RELAY_PIN_2, LOW); // Activate relay 2
+  //       break;
+  //     }
+  //     delay(100);
+  //   }
+  // }
+  // count++;
+
+  // delay(200);
 }
