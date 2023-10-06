@@ -18,10 +18,10 @@
             "includePath": [
                 "/Users/harrisonbonner/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino",
                 "/Users/harrisonbonner/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/variants/eightanaloginputs",
-                "/Users/harrisonbonner/Documents/Arduino/libraries/Adafruit_Unified_Sensor",
-                "/Users/harrisonbonner/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/libraries/Wire/src",
-                "/Users/harrisonbonner/Documents/Arduino/libraries/Adafruit_BMP3XX_Library",
+                "/Users/harrisonbonner/Documents/Arduino/libraries/Adafruit_MPL3115A2_Library",
                 "/Users/harrisonbonner/Documents/Arduino/libraries/Adafruit_BusIO",
+                "/Users/harrisonbonner/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/libraries/Wire/src",
+                "/Users/harrisonbonner/Documents/Arduino/libraries/Adafruit_Unified_Sensor",
                 "/Users/harrisonbonner/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/libraries/SPI/src",
                 "/Users/harrisonbonner/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include",
                 "/Users/harrisonbonner/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include-fixed",
