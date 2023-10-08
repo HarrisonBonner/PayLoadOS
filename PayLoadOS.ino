@@ -5,7 +5,7 @@
 // #include "Adafruit_BMP3XX.h"
 #include <SPI.h>
 
-double ALTITUDE_THRESHOLD_ADD = 0.5; // Set your desired altitude threshold in meters
+double ALTITUDE_THRESHOLD_ADD = 150; // Set your desired altitude threshold in meters
 double ALTITUDE_THRESHOLD;
 #define RELAY_PIN_2 7
 #define motorRelay 6
@@ -48,16 +48,22 @@ void setup()
 
   // Take a few readings to stablize the altimeter
   int testAltitude = baro.getAltitude();
-  testAltitude = baro.getAltitude();
-  testAltitude = baro.getAltitude();
+  for (int i = 0; i < 100; i++)
+  {
+    testAltitude = baro.getAltitude();
+    Serial.print(" First Loop i:");
+    Serial.println(i);
+  }
 
   // Take 5 altitudes, average, then set as zero altitude
   double altitudeSum = 0;
-  for (int i = 0; i < 5; i++)
+  for (int i = 0; i < 20; i++)
   {
     altitudeSum += baro.getAltitude();
+    Serial.print(" Second Loop i:");
+    Serial.println(i);
   }
-  double avgAlt = altitudeSum / 5;
+  double avgAlt = altitudeSum / 20;
   ALTITUDE_THRESHOLD = avgAlt + ALTITUDE_THRESHOLD_ADD;
 
   Serial.print("avgAlt was: ");
@@ -69,19 +75,17 @@ void setup()
 
 void loop()
 {
-  while(1){
-  digitalWrite(7, HIGH);
-  digitalWrite(6, HIGH);
-  delay(1000);
-  digitalWrite(6, LOW);
-  digitalWrite(7, LOW);
-  delay(1000);
-  }
+  // while(1){
+  // digitalWrite(7, HIGH);
+  // digitalWrite(6, HIGH);
+  // delay(1000);
+  // digitalWrite(6, LOW);
+  // digitalWrite(7, LOW);
+  // delay(1000);
+  // }
   // System Checking loop until we meet threshold
 
   // Get current altitude
-
-
 
   float currentAltitude = baro.getAltitude();
 
@@ -105,15 +109,17 @@ void loop()
 
       if (currentAltitude < ALTITUDE_THRESHOLD)
       {
+        digitalWrite(RELAY_PIN_2, HIGH);
+        Serial.println("Solenoid activated");
+        delay(3000);
+        digitalWrite(RELAY_PIN_2, LOW);
         digitalWrite(motorRelay, HIGH);
-        Serial.println("Motor relay activated");
+        Serial.println("Solenoid Deactivated, Motor activated");
         delay(3000);
-        digitalWrite(RELAY_PIN_2, HIGH); // Activate relay 2
-        Serial.println("Relays activated!");
-        delay(3000);
-        digitalWrite(RELAY_PIN_2, LOW); // Activate relay 2
-        Serial.println("Solenoid turned off");
-        while(1){}
+        digitalWrite(motorRelay, LOW);
+        while (1)
+        {
+        }
       }
       delay(100);
     }
